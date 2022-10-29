@@ -13,16 +13,17 @@
  * ```DelegatorAdminAddr``` is the owner/administrator of the Delegator;
  * ```DelegateDeployerAddr``` is the deployer of the upgraded logic contract;
  * ```HolderAddr``` (optional) is the address of a random holder of funds;
+ * ```implementationFunc``` function to retrieve the current implementation used by the Proxy;
+ * ```upgradeFunc``` function to upgrade the current implementation used by the Proxy; 
  * ```buildDir``` is the path to the compiled contract directory;
  * ```logDir``` is the path to the log directory;
  * ```transactions``` is the path to the transactions to be replayed;
- * ```delegateAbi``` is the path to the abi of the logic contract
+ * ```delegateAbi``` is the path to the abi of the logic contract.
 
 
-1. Configure the test file ```test/test_mainnet.js```:
-  * To ensure that the proxy is using the correct logic contract, we retrieve its implementation with ```proxy.implementation.call()```. Make sure to replace this with the appropriate method, or comment out the check.
-  * The ```txSetImplementation``` transaction upgrades the implementation of the Proxy. Make sure to use the correct method and parameters for the upgrade operation.
-  * If the  ```DelegatorAdmin``` requires funds to perform the logic upgrade operation, you can decomment the  ```txTransferFunds``` transaction and configure it as needed.
+6. Configure the test file ```test/test_mainnet.js```:
+  * The ```txSetImplementation``` transaction upgrades the implementation contract used by the Proxy. Make sure to add additional parameters if needed.
+  * If the  ```DelegatorAdmin``` or the ```DelegateDeployer``` require funds to perform the upgrade/deployment operations, you can decomment the  ```txTransferFunds``` transactions and configure them as needed.
 
 
 ## Commands
