@@ -44,7 +44,8 @@ contract("Delegator", () => {
       console.log(chalk.yellow("\n> Checking current Logic contract used by the Proxy"));
       logger.log('- Checking current Logic contract used by the Proxy\n')
 
-      const txCheckLogicV1 = await proxy.implementation.call({from: config.DelegatorAdminAddr});
+      const txCheckLogicV1 = await proxy[config.implementationFunc].call({ from: config.DelegatorAdminAddr });
+
       assert.equal(txCheckLogicV1.toString(), config.DelegateAddr);
       console.log("✔️ Proxy is using LogicV1 @ " + txCheckLogicV1.toString() + '\n');
       logger.log("- Proxy is using LogicV1 @ " + txCheckLogicV1.toString() + '\n')
@@ -78,19 +79,24 @@ contract("Delegator", () => {
       console.log(chalk.yellow("\n> Upgrading the logic contract used by the Proxy"));
       logger.log("- Upgrading the logic contract used by the Proxy\n");
 
+      //Transfer funds from Holder to DelegateDeployer so that it can deploy the new implementation
+      //  const txTransferFunds = await web3.eth.sendTransaction({ to: config.DelegateDeployerAddr, from: config.HolderAddr, value: web3.utils.toWei('1') })
+      //  console.log("✔️ Funds transferred to admin @: " + config.DelegateDeployerAddr + '\n');
+      //  logger.log("- Funds transferred to admin @: " + config.DelegateDeployerAddr + '\n');
+
       const logicV2 = await Delegate.new({ from: config.DelegateDeployerAddr });
       console.log("✔️ LogicV2 deployed @: " + logicV2.address);
       logger.log("- LogicV2 deployed @: " + logicV2.address+'\n');
 
-      //Give funds from a radom holder address to admin so that it can set the new implementation
-      //      const txTransferFunds = await web3.eth.sendTransaction({ to: config.DelegatorAdminAddr, from: config.HolderAddr, value: web3.utils.toWei('1') })
-      //    console.log("✔️ Funds transferred to admin @: " + config.DelegatorAdminAddr + '\n');
+      //Transfer funds from Holder to DelegatorAdmin so that it can set the new implementation
+      //  const txTransferFunds = await web3.eth.sendTransaction({ to: config.DelegatorAdminAddr, from: config.HolderAddr, value: web3.utils.toWei('1') })
+      //  console.log("✔️ Funds transferred to admin @: " + config.DelegatorAdminAddr + '\n');
       //  logger.log("- Funds transferred to admin @: " + config.DelegatorAdminAddr + '\n');
 
       //Set the implementation of the proxy to logic contract V2
       let proxy =  await Delegator.at(config.DelegatorAddr);
 
-      const txSetImplementation = await proxy._setImplementation(logicV2.address, { from: config.DelegatorAdminAddr});
+      const txSetImplementation = await proxy[config.upgradeFunc](logicV2.address, { from: config.DelegatorAdminAddr });
       console.log("✔️ Proxy implementation upgraded");
       logger.log("- Proxy implementation upgraded\n");
 
