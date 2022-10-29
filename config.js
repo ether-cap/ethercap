@@ -6,6 +6,8 @@ module.exports = {
     DelegatorAdminAddr: "",
     DelegateDeployerAddr: "",
     HolderAddr: "",
+    implementationFunc: "",
+    upgradeFunc: "",
     buildDir: "yourPathTo/build/contracts",
     logDir: "yourPathTo/log",
     transactions: "yourPathTo.../transactions/transactions.json",
